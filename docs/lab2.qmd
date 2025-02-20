@@ -15,7 +15,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 **Read in the Minnesota tree growth dataset. Use `glimpse` to understand the structure and names of the dataset. Decribe the structure and what you see in the dataset?**
 ```{r}
 library(dplyr)
-tree_dat <- read.csv("data/tree_dat.csv")
+tree_dat <- read.csv("/Users/hannavelicer/Desktop/ESS330/lab2-tree-growth/data/tree_dat.csv")
 glimpse("tree_dat")
 ```
 *Answer:* This dataset is a 131,386 x 8 table of tree growth analysis for 15 different species. The data ranges from 1897 to 2007. The columns are treeID, standID, stand, year, species, age, inc, and rad_ib.
@@ -173,16 +173,17 @@ tree_dat %>%
   mutate(rad_ib_cm = rad_ib_mm/10) %>%
   mutate(DBH_cm = rad_ib_cm * 2) %>%
   mutate(DBH_class = case_when(
-    DBH_cm <= 10 ~ "Small",
-    DBH_cm > 10 & DBH_cm <= 30 ~ "Medium",
-    DBH_cm > 30 ~ "Large",
+    DBH_cm <= 2.5 ~ "Seedling",
+    DBH_cm > 2.5 & DBH_cm <= 10 ~ "Sapling",
+    DBH_cm > 10 & DBH_cm <= 30 ~ "Pole",
+    DBH_cm > 30 ~ "Sawlog",
     TRUE ~ "Unknown"
   )) %>%
   filter(year == 2007) %>%
   count(DBH_class) %>%
   print()
 ```
-*Answer:* The "Small" class contains 252 trees, the "Medium" class contains 1,963 trees, and the "Large" class contains 76 trees.
+*Answer:* The "Sapling" class contains 252 trees, the "Pole" class contains 1,963 trees, the "Sawlog" class contains 76 trees, and the "Seedling" class contains 0 trees.
 
 ## Question 17
 
