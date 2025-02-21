@@ -271,4 +271,4 @@ The 3 species with the fastest growth are Pinus resinosa (*0.359, overall fastes
 
 ![Pinus resinosa](/Users/hannavelicer/Desktop/ESS330/lab2-tree-growth/img/tree2.jpg)
 
-These images depict Pinus resinosa, commonly known as red pine, which is the tree with the overall fastest growth.
+This image depicts Pinus resinosa, commonly known as red pine, which is the tree with the overall fastest growth.
