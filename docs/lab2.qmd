@@ -268,6 +268,6 @@ slowest_species <- growth_stats %>%
 ```
 The 3 species with the fastest growth are Pinus resinosa (*0.359, overall fastest*), Populus tremuloides (*0.331*), and Pinus banksiana (*0.326*). The 3 species with the slowest growth are Larix laricina (*0.150*), Thuja occidentalis (*0.152*), and Quercus rubra (*0.167*).
 
-<img src="img/tree2.jpg" width="360" alt="Pinus resinosa">
-<img src="img/tree1.jpg" width="425" alt="Pinus resinosa">
+<img src="/Users/hannavelicer/Desktop/ESS330/lab2-tree-growth/img/tree2.jpg" width="360" alt="Pinus resinosa">
+<img src="/Users/hannavelicer/Desktop/ESS330/lab2-tree-growth/img/tree1.jpg" width="425" alt="Pinus resinosa">
 These images depict Pinus resinosa, commonly known as red pine, which is the tree with the overall fastest growth.
