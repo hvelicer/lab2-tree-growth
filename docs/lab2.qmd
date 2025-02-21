@@ -148,9 +148,10 @@ tree_dat <- tree_dat %>%
 **A key measurement in forestry in “basal area column”. The metric is computed with the formula:
 BA(m2) = 0.00007854⋅DBH^2, where DBH is the diameter at breast height (cm). Use mutate to compute DBH in centimeters, and BA in m2 (HINT: Make sure rad_ib is in cm prior to computing the diameter!). What is the mean BA_m2 of the the species `POTR` in 2007?**
 ```{r}
-tree_dat %>%
+tree_dat <- tree_dat %>%
   mutate(rad_ib_cm = rad_ib_mm/10) %>%
-  mutate(DBH_cm = rad_ib_cm * 2, BA_m2 = 0.00007854 * (DBH_cm^2)) %>%
+  mutate(DBH_cm = rad_ib_cm * 2, BA_m2 = 0.00007854 * (DBH_cm^2))
+tree_dat %>%
   filter(species == "POTR", year == 2007) %>%
   summarize (mean_BA_m2 = mean(BA_m2, na.rm = TRUE)) %>%
   print()
@@ -172,8 +173,6 @@ tree_dat %>%
 **Use `mutate` and `case_when` to add a new column to you data.frame that classifies each tree into the proper DBH_class. Once done, limit your dataset to the year 2007 and report the number of each class with count.**
 ```{r}
 tree_dat %>%
-  mutate(rad_ib_cm = rad_ib_mm/10) %>%
-  mutate(DBH_cm = rad_ib_cm * 2) %>%
   mutate(DBH_class = case_when(
     DBH_cm < 2.5 ~ "Seedling",
     DBH_cm >= 2.5 & DBH_cm < 10 ~ "Sapling",
@@ -191,8 +190,6 @@ tree_dat %>%
 **Compute the mean DBH (in cm) and standard deviation of DBH (in cm) for all trees in 2007. Explain the values you found and their statistical meaning.**
 ```{r}
 tree_dat %>%
-  mutate(rad_ib_cm = rad_ib_mm/10) %>%
-  mutate(DBH_cm = rad_ib_cm * 2) %>%
   filter(year == 2007) %>%
   summarize(mean_DBH_cm = mean(DBH_cm, na.rm = TRUE), sd_DBH_cm = sd(DBH_cm, na.rm = TRUE)) %>%
   print()
@@ -242,32 +239,21 @@ top_stands <- stand_years %>%
 
 We are interested in the annual DBH growth rate of each species through time, but we only want to include trees with at least a 10 year growth record. To identify this, we need to identify the per year growth made by each tree, their total growth record, and then average that, and compute the standard deviation, across the species. Use a combination of dplyr verbs to compute these values and report the 3 species with the fastest growth, and the 3 species with the slowest growth. (** You will need to use either `lag()` or `diff()` in your computation. You can learn more about each in the Help pages) Lastly, find and include an image of the fastest growing species. Add the image to your images directory.
 ```{r}
-library(dplyr)
-tree_dat <- tree_dat %>%
-  mutate(rad_ib_cm = rad_ib_mm/10) %>%
-  mutate(DBH_cm = rad_ib_cm * 2) 
-tree_dat <- tree_dat %>%
-  arrange(treeID, year) %>%
+tree_dat %>%
   group_by(treeID) %>%
-  mutate(annual_growth = DBH_cm - lag(DBH_cm)) %>%
-  ungroup()
-growth_records <- tree_dat %>%
-  group_by(treeID) %>%
-  summarize(total_years = n(), avg_growth = mean(annual_growth, na.rm = TRUE)) %>%
-  filter(total_years >= 10)
-growth_stats <- tree_dat %>%
-  inner_join(growth_records, by = "treeID")%>%
+  arrange(year) %>%
+  mutate(growth = DBH_cm - lag(DBH_cm),
+         total_years = n()) %>%
+  filter(!is.na(growth), total_years > 10) %>%
+  ungroup() %>%
   group_by(species) %>%
-  summarize(mean_growth = mean(avg_growth, na.rm = TRUE), sd_growth = sd(avg_growth, na.rm = TRUE)) %>%
-  arrange(desc(mean_growth))
-fastest_species <- growth_stats %>%
-  slice_head(n = 3) %>%
-  print()
-slowest_species <- growth_stats %>%
-  slice_tail (n = 3) %>%
+  summarize(mean_growth = mean(growth)) %>%
+  slice_max(mean_growth, n = 3) %>%
+  print() %>%
+  slice_min(mean_growth, n = 3) %>%
   print()
 ```
-The 3 species with the fastest growth are Pinus resinosa (*0.359, overall fastest*), Populus tremuloides (*0.331*), and Pinus banksiana (*0.326*). The 3 species with the slowest growth are Larix laricina (*0.150*), Thuja occidentalis (*0.152*), and Quercus rubra (*0.167*).
+The 3 species with the fastest growth are Pinus resinosa (*0.357, overall fastest*), Populus tremuloides (*0.330*), and Pinus banksiana (*0.325*). The 3 species with the slowest growth are Larix laricina (*0.149*), Thuja occidentalis (*0.152*), and Quercus rubra (*0.167*).
 
 ![Pinus resinosa](/Users/hannavelicer/Desktop/ESS330/lab2-tree-growth/img/tree2.jpg)
 
